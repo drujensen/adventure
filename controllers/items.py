@@ -1,6 +1,7 @@
 from fastapi import APIRouter
-from models.item import Item
 from typing import Optional
+
+from controllers.dto.item import Item
 
 items_router = APIRouter(prefix="/items")
 
@@ -18,7 +19,6 @@ def read_item(item_id:int):
 
 @items_router.put("/{item_id}")
 def update_item(item_id: int, item: Item):
-    item.price = item.price * 1.0775
     return {"name": item.name,"price": item.price, "id": item_id}
 
 @items_router.delete("/{item_id}")
