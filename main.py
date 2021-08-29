@@ -3,6 +3,7 @@ from fastapi.staticfiles import StaticFiles
 
 from config.settings import settings
 from controllers.home import home_router
+from controllers.adventures import adventures_router
 from controllers.items import items_router
 
 from db.migrate import migrate
@@ -12,6 +13,7 @@ app = FastAPI(
         version=settings.PROJECT_VERSION)
 
 app.include_router(home_router)
+app.include_router(adventures_router)
 app.include_router(items_router)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 

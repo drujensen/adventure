@@ -1,0 +1,46 @@
+<%inherit file="/shared/layout.html" />
+
+<%block name="head">
+  <title>Adventures - List</title>
+</%block>
+
+<%block name="content">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-11">
+        <h2>Adventures</h2>
+      </div>
+      <div class="col-sm-1">
+        <a class="btn btn-success btn-sm" href="/adventures/new">New</a>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Draft</th>
+            <th>Actions</th>
+          </tr>
+        <tbody>
+        % for adventure in adventures:
+          <tr>
+            <td>${adventure.title}</td>
+            <td>${adventure.description}</td>
+            <td>${adventure.draft}</td>
+            <td>
+              <span>
+                <a href="/adventures/${adventure.id}" class="btn btn-info btn-sm">Show</a>
+                <a href="/adventures/${adventure.id}/edit" class="btn btn-success btn-sm">Edit</a>
+                <a href="/adventures/${adventure.id}/delete" data-method="delete" data-confirm="Are you sure?" class="btn btn-danger btn-sm">Delete</a>
+              </span>
+            </td>
+          </tr>
+        % endfor
+        </tbody>
+      </table>
+    </div>
+  </div>
+</%block>

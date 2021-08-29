@@ -1,11 +1,22 @@
 <%inherit file="/shared/layout.html" />
 
 <%block name="head">
-  <title>Job Board</title>
+  <title>Adventures</title>
 </%block>
 
 <%block name="content">
   <div class="container">
-    <h1 class="display-4">Find Jobs...</h1>
+    <h1 class="display-4">Choose Your Own Adventure</h1>
+    <div class="row">
+    % for adventure in adventures:
+      <div class="col-4 card">
+        <div class="card-body">
+          <h5 class="card-title">${adventure.title}</h5>
+          <p class="card-text">${adventure.description}</p>
+          <a href="/adventures/${adventure.id}" class="btn btn-primary">Details</a>
+        </div>
+      </div>
+    % endfor
+    </div>
   </div>
 </%block>

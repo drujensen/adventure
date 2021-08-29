@@ -3,3 +3,4 @@ uvicorn
 mako
 aiofiles
 sqlalchemy
+python-multipart

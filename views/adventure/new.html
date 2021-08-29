@@ -1,0 +1,26 @@
+<%inherit file="/shared/layout.html" />
+
+<%block name="head">
+  <title>Adventures - New</title>
+</%block>
+
+<%block name="content">
+  <div class="container">
+    <h1>New Adventure</h1>
+
+    <form action="/adventures/" method="post">
+      <div class="form-group">
+        <input type="text" name="title" placeholder="Title" value="" class="form-control"/>
+      </div>
+      <div class="form-group">
+        <input type="text" name="description" placeholder="Description" value="" class="form-control"/>
+      </div>
+      <div class="form-group">
+        <input type="checkbox" id="draft" name="draft" value="" class="form-check-input"/>
+        <label for="draft">Draft</label>
+      </div>
+      <input type="submit" value="Submit" class="btn btn-success btn-sm"/>
+      <a href="/adventures/" class="btn btn-info btn-sm">Cancel</a>
+    </form>
+  </div>
+</%block>
