@@ -8,7 +8,7 @@
   <div class="container">
     <h1>Edit Adventure</h1>
 
-    <form action="/adventures/${adventure.id}" method="post">
+    <form action="/adventures/${adventure.id}?_method=put" method="post">
       <div class="form-group">
         <input type="text" name="title" placeholder="Title" value="${adventure.title}" class="form-control"/>
       </div>
@@ -16,7 +16,7 @@
         <input type="text" name="description" placeholder="Description" value="${adventure.description}" class="form-control"/>
       </div>
       <div class="form-group">
-        <input type="checkbox" id="draft" name="draft" value="${adventure.draft}" class="form-check-input"/>
+        <input type="checkbox" id="draft" name="draft" class="form-check-input"/>
         <label for="draft">Draft</label>
       </div>
       <input type="submit" value="Submit" class="btn btn-success btn-sm"/>

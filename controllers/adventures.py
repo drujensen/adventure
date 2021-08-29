@@ -1,11 +1,9 @@
 from typing import Optional
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse, Response
 from mako.lookup import TemplateLookup
-from sqlalchemy import select
 
-from controllers.dto.adventure import AdventureData
 from models.adventure import Adventure
 from config.database import Session
 
@@ -28,12 +26,13 @@ def adventures_new():
     html = template.render()
     return HTMLResponse(html)
 
-@adventures_router.post("/", response_model=AdventureData)
-def adventures_create(adventure_data: AdventureData = Depends(AdventureData.as_form)):
+@adventures_router.post("/")
+async def adventures_create(request: Request):
+    form = await request.form()
     adventure = Adventure(
-            title=adventure_data.title,
-            description=adventure_data.description,
-            draft=adventure_data.draft
+            title=form["title"],
+            description=form["description"],
+            draft=("draft" in form)
             )
     session = Session()
     session.add(adventure)
@@ -44,31 +43,32 @@ def adventures_create(adventure_data: AdventureData = Depends(AdventureData.as_f
     return response
 
 
-@adventures_router.get("/{adventure_id}")
-def adventures_read(adventure_id:int):
+@adventures_router.get("/{id}")
+def adventures_read(id:int):
     session = Session()
-    adventure = session.query(Adventure).filter_by(id=adventure_id).first()
+    adventure = session.query(Adventure).filter_by(id=id).first()
 
     template = views.get_template("/show.html")
     html = template.render(adventure=adventure)
     return HTMLResponse(html)
 
-@adventures_router.get("/{adventure_id}/edit")
-def adventures_edit(adventure_id:int):
+@adventures_router.get("/{id}/edit")
+def adventures_edit(id:int):
     session = Session()
-    adventure = session.query(Adventure).filter_by(id=adventure_id).first()
+    adventure = session.query(Adventure).filter_by(id=id).first()
 
     template = views.get_template("/edit.html")
     html = template.render(adventure=adventure)
     return HTMLResponse(html)
 
-@adventures_router.post("/{adventure_id}", response_model=AdventureData)
-def adventures_update(adventure_id: int, adventure_data: AdventureData = Depends(AdventureData.as_form)):
+@adventures_router.put("/{id}")
+async def adventures_update(id: int, request: Request):
+    form = await request.form()
     session = Session()
-    adventure = session.query(Adventure).filter_by(id=adventure_id).first()
-    adventure.title = adventure_data.title
-    adventure.description = adventure_data.description
-    adventure.draft = adventure_data.draft
+    adventure = session.query(Adventure).filter_by(id=id).first()
+    adventure.title = form["title"]
+    adventure.description = form["description"]
+    adventure.draft = ("draft" in form)
     session.add(adventure)
     session.commit()
 
@@ -76,10 +76,10 @@ def adventures_update(adventure_id: int, adventure_data: AdventureData = Depends
     response.headers["location"] = "/adventures/"
     return response
 
-@adventures_router.get("/{adventure_id}/delete")
-def adventures_delete(adventure_id: int):
+@adventures_router.delete("/{id}")
+def adventures_delete(id: int):
     session = Session()
-    adventure = session.query(Adventure).filter_by(id=adventure_id).first()
+    adventure = session.query(Adventure).filter_by(id=id).first()
     session.delete(adventure)
     session.commit()
 

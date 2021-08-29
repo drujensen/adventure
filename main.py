@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
+from middleware.method import MethodMiddleware
+
 from config.settings import settings
 from controllers.home import home_router
 from controllers.adventures import adventures_router
@@ -12,9 +14,12 @@ app = FastAPI(
         title=settings.PROJECT_NAME,
         version=settings.PROJECT_VERSION)
 
+app.add_middleware(MethodMiddleware)
+
 app.include_router(home_router)
 app.include_router(adventures_router)
 app.include_router(items_router)
+
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 migrate()
