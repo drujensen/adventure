@@ -42,7 +42,6 @@ async def adventures_create(request: Request):
     response.headers["location"] = "/adventures/"
     return response
 
-
 @adventures_router.get("/{id}")
 def adventures_read(id:int):
     session = Session()

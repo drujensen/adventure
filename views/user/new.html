@@ -1,0 +1,23 @@
+<%inherit file="/shared/layout.html" />
+
+<%block name="head">
+  <title>Sign Up</title>
+</%block>
+
+<%block name="content">
+  <div class="container">
+    <h1>Sign Up</h1>
+
+    <form action="/profile" method="post">
+      <div class="form-group">
+        <input type="email" name="email" placeholder="Email" value="${user.email}" class="form-control"/>
+      </div>
+      <div class="form-group">
+        <input type="password" name="password" placeholder="Password" class="form-control"/>
+      </div>
+      <input type="submit" value="Submit" class="btn btn-success btn-sm"/>
+      <a href="/" class="btn btn-info btn-sm">Cancel</a>
+    </form>
+    <a href="/signin">Already have an account?</a>
+  </div>
+</%block>

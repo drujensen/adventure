@@ -1,0 +1,22 @@
+<%inherit file="/shared/layout.html" />
+
+<%block name="head">
+  <title>Profile - Edit</title>
+</%block>
+
+<%block name="content">
+  <div class="container">
+    <h1>Edit Profile</h1>
+
+    <form action="/profile?_method=put" method="post">
+      <div class="form-group">
+        <input type="email" name="email" placeholder="Email" value="${user.email}" class="form-control"/>
+      </div>
+      <div class="form-group">
+        <input type="password" name="password" placeholder="Password" value="${user.password}" class="form-control"/>
+      </div>
+      <input type="submit" value="Submit" class="btn btn-success btn-sm"/>
+      <a href="/" class="btn btn-info btn-sm">Cancel</a>
+    </form>
+  </div>
+</%block>

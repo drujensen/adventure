@@ -1,0 +1,17 @@
+<%inherit file="/shared/layout.html" />
+
+<%block name="head">
+  <title>Profile</title>
+</%block>
+
+<%block name="content">
+  <div class="container">
+    <h1>Profile</h1>
+
+    <p>${user.email}</p>
+    <p>
+      <a href="/profile/edit" class="btn btn-success btn-sm">Edit</a>
+      <a href="/profile?_method=delete" data-method="delete" data-confirm="Are you sure?" class="btn btn-danger btn-sm">Delete</a>
+    </p>
+  </div>
+</%block>
