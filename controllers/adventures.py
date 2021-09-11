@@ -13,12 +13,16 @@ adventures_router = APIRouter(prefix="/adventures")
 views = TemplateLookup(directories=['views', 'views/adventure'])
 
 @adventures_router.get("/")
-def adventures_index(request: Request, db: Session = Depends(get_db), q:Optional[str] = None):
+def adventures_index(request: Request, db: Session = Depends(get_db)):
     user_id = request.cookies.get("user-id")
     user = db.query(User).filter_by(id=user_id).first()
 
-    adventures = db.query(Adventure).all()
-    #TODO add filter if q exists
+    if user == None:
+        response = Response(status_code=302)
+        response.headers["location"] = "/signin"
+        return response
+
+    adventures = db.query(Adventure).filter_by(author=user).all()
 
     template = views.get_template("/index.html")
     html = template.render(user=user, adventures=adventures)
@@ -29,6 +33,11 @@ def adventures_new(request: Request, db: Session = Depends(get_db)):
     user_id = request.cookies.get("user-id")
     user = db.query(User).filter_by(id=user_id).first()
 
+    if user == None:
+        response = Response(status_code=302)
+        response.headers["location"] = "/signin"
+        return response
+
     template = views.get_template("/new.html")
     html = template.render(user=user)
     return HTMLResponse(html)
@@ -37,6 +46,11 @@ def adventures_new(request: Request, db: Session = Depends(get_db)):
 async def adventures_create(request: Request, db: Session = Depends(get_db)):
     user_id = request.cookies.get("user-id")
     user = db.query(User).filter_by(id=user_id).first()
+
+    if user == None:
+        response = Response(status_code=302)
+        response.headers["location"] = "/signin"
+        return response
 
     form = await request.form()
     adventure = Adventure(
@@ -57,6 +71,11 @@ def adventures_read(id:int, request: Request, db: Session = Depends(get_db)):
     user_id = request.cookies.get("user-id")
     user = db.query(User).filter_by(id=user_id).first()
 
+    if user == None:
+        response = Response(status_code=302)
+        response.headers["location"] = "/signin"
+        return response
+
     adventure = db.query(Adventure).filter_by(id=id).first()
 
     template = views.get_template("/show.html")
@@ -68,6 +87,11 @@ def adventures_edit(id:int, request: Request, db: Session = Depends(get_db)):
     user_id = request.cookies.get("user-id")
     user = db.query(User).filter_by(id=user_id).first()
 
+    if user == None:
+        response = Response(status_code=302)
+        response.headers["location"] = "/signin"
+        return response
+
     adventure = db.query(Adventure).filter_by(id=id).first()
 
     template = views.get_template("/edit.html")
@@ -78,6 +102,11 @@ def adventures_edit(id:int, request: Request, db: Session = Depends(get_db)):
 async def adventures_update(id: int, request: Request, db: Session = Depends(get_db)):
     user_id = request.cookies.get("user-id")
     user = db.query(User).filter_by(id=user_id).first()
+
+    if user == None:
+        response = Response(status_code=302)
+        response.headers["location"] = "/signin"
+        return response
 
     form = await request.form()
 
@@ -94,7 +123,15 @@ async def adventures_update(id: int, request: Request, db: Session = Depends(get
     return response
 
 @adventures_router.delete("/{id}")
-def adventures_delete(id: int, db: Session = Depends(get_db)):
+def adventures_delete(id: int, request: Request, db: Session = Depends(get_db)):
+    user_id = request.cookies.get("user-id")
+    user = db.query(User).filter_by(id=user_id).first()
+
+    if user == None:
+        response = Response(status_code=302)
+        response.headers["location"] = "/signin"
+        return response
+
     adventure = db.query(Adventure).filter_by(id=id).first()
     db.delete(adventure)
     db.commit()

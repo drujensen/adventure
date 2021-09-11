@@ -18,6 +18,17 @@ def home(request: Request, db: Session = Depends(get_db)):
     user_id = request.cookies.get("user-id")
     user = db.query(User).filter_by(id=user_id).first()
 
-    adventures = db.query(Adventure).all()
+    adventures = db.query(Adventure).filter_by(draft=False).all()
     template = views.get_template("/home/index.html")
     return HTMLResponse(template.render(user=user, adventures=adventures))
+
+@home_router.get("/details/{id}")
+def details(id: int, request: Request, db: Session = Depends(get_db)):
+    user_id = request.cookies.get("user-id")
+    user = db.query(User).filter_by(id=user_id).first()
+
+    adventure = db.query(Adventure).filter_by(id=id).first()
+
+    template = views.get_template("/home/show.html")
+    html = template.render(user=user, adventure=adventure)
+    return HTMLResponse(html)

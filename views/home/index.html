@@ -12,8 +12,9 @@
       <div class="col-4 card">
         <div class="card-body">
           <h5 class="card-title">${adventure.title}</h5>
+          <h6 class="card-subtitle text-muted">${adventure.author.email}</h6>
           <p class="card-text">${adventure.description}</p>
-          <a href="/adventures/${adventure.id}" class="btn btn-primary">Details</a>
+          <a href="/details/${adventure.id}" class="btn btn-primary">Details</a>
         </div>
       </div>
     % endfor

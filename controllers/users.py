@@ -44,6 +44,11 @@ def users_read(request: Request, db: Session = Depends(get_db)):
     user_id = request.cookies.get("user-id")
     user = db.query(User).filter_by(id=user_id).first()
 
+    if user == None:
+        response = Response(status_code=302)
+        response.headers["location"] = "/signin"
+        return response
+
     template = views.get_template("/show.html")
     html = template.render(user=user)
     return HTMLResponse(html)
@@ -53,6 +58,11 @@ def users_edit(request: Request, db: Session = Depends(get_db)):
     user_id = request.cookies.get("user-id")
     user = db.query(User).filter_by(id=user_id).first()
 
+    if user == None:
+        response = Response(status_code=302)
+        response.headers["location"] = "/signin"
+        return response
+
     template = views.get_template("/edit.html")
     html = template.render(user=user)
     return HTMLResponse(html)
@@ -61,6 +71,11 @@ def users_edit(request: Request, db: Session = Depends(get_db)):
 async def users_update(request: Request, db: Session = Depends(get_db)):
     user_id = request.cookies.get("user-id")
     user = db.query(User).filter_by(id=user_id).first()
+
+    if user == None:
+        response = Response(status_code=302)
+        response.headers["location"] = "/signin"
+        return response
 
     form = await request.form()
     user.email = form["email"]
@@ -76,6 +91,11 @@ async def users_update(request: Request, db: Session = Depends(get_db)):
 def users_delete(request: Request, db: Session = Depends(get_db)):
     user_id = request.cookies.get("user-id")
     user = db.query(User).filter_by(id=user_id).first()
+
+    if user == None:
+        response = Response(status_code=302)
+        response.headers["location"] = "/signin"
+        return response
 
     db.delete(user)
     db.commit()
