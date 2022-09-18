@@ -8,11 +8,11 @@ a CRUD service to managing your adventures i.e. a blog site.
 
 Setup your virtual python environment:
 ```
-python3 -m venv env
+python3 -m venv .env
 ```
 Activate the environment each time you start a new terminal:
 ```
-. env/bin/activate
+. .env/bin/activate
 ```
 
 Install the packages:
