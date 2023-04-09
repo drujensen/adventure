@@ -17,6 +17,7 @@ def get_db():
         yield db
     finally:
         db.close()
+
 @as_declarative()
 class Base:
     id: Any

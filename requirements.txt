@@ -1,8 +1,0 @@
-fastapi
-uvicorn
-mako
-aiofiles
-sqlalchemy
-python-multipart
-passlib
-bcrypt
