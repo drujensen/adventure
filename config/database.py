@@ -9,7 +9,8 @@ engine = create_engine(
      settings.DATABASE_URL, connect_args={"check_same_thread": False}
 )
 
-SessionLocal = sessionmaker(autocommit=False,autoflush=False,bind=engine)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
 
 def get_db():
     db = SessionLocal()
@@ -18,12 +19,13 @@ def get_db():
     finally:
         db.close()
 
+
 @as_declarative()
 class Base:
     id: Any
     __name__: str
 
-    #to generate tablename from classname
+    # to generate tablename from classname
     @declared_attr
     def __tablename__(self) -> str:
         return self.__name__.lower()
