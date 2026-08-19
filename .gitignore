@@ -1,2 +1,7 @@
 __pycache__
+*.pyc
 .env
+venv/
+source/
+db/*.db
+.aiagent/

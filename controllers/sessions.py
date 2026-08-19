@@ -6,6 +6,7 @@ import bcrypt
 from models.user import User
 from sqlalchemy.orm import Session
 from config.database import get_db
+from controllers.common import get_user, redirect, login, logout
 
 sessions_router = APIRouter()
 views = TemplateLookup(directories=['views', 'views/session'])
@@ -13,8 +14,9 @@ views = TemplateLookup(directories=['views', 'views/session'])
 
 @sessions_router.get("/signin")
 def sessions_new(request: Request, db: Session = Depends(get_db)):
+    user = get_user(request, db)
     template = views.get_template("/new.html")
-    html = template.render(user=None)
+    html = template.render(user=user)
     return HTMLResponse(html)
 
 
@@ -26,25 +28,25 @@ async def sessions_create(request: Request, db: Session = Depends(get_db)):
 
     user = db.query(User).filter_by(email=email).first()
 
-    # TODO: Validate password
-    if not bcrypt.checkpw(password.encode("utf-8"), user.hashed_password):
-        response = Response(status_code=303)
-        response.headers["location"] = "/signin"
-        return response
+    if user is None:
+        return redirect("/signin", 303)
 
-    response = Response(status_code=303)
-    response.set_cookie("user-id", user.id)
-    response.headers["location"] = "/"
+    stored = user.hashed_password
+    if isinstance(stored, bytes):
+        stored_hash = stored
+    else:
+        stored_hash = stored.encode("utf-8")
+
+    if not bcrypt.checkpw(password.encode("utf-8"), stored_hash):
+        return redirect("/signin", 303)
+
+    response = redirect("/", 303)
+    login(response, user.id)
     return response
 
 
 @sessions_router.delete("/signout")
-async def sessions_delete(request: Request, db: Session = Depends(get_db)):
-    user_id = request.cookies.get("user-id")
-    user = db.query(User).filter_by(id=user_id).first()
-    user.delete()
-
-    response = Response(status_code=303)
-    response.set_cookie("user-id", None)
-    response.headers["location"] = "/"
+def sessions_delete(request: Request):
+    response = redirect("/", 303)
+    logout(response)
     return response
